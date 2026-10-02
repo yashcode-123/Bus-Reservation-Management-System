@@ -5,3 +5,17 @@ ASHUTOSH MULE.
 Miraj to Pune
 AC Bus
 34
+1003
+SUMIT
+20
+102
+Miraj to Mumbai
+Sleeper Bus
+6
+1004
+TANMAY
+25
+101
+Miraj to Pune
+AC Bus
+5
