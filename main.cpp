@@ -4,6 +4,7 @@
 #include<fstream>
 using namespace std;
 
+
 /*
     BUS RESERVATION MANAGEMENT SYSTEM
     Group No.: 13
@@ -241,7 +242,7 @@ public:
     {
       file << reservationId << endl;
       file << passengerName << endl;
-      file << passengerAge << end;
+      file << passengerAge << endl;
       file << busNo << endl;
       file << route << endl;
       file << busType << endl;
@@ -255,9 +256,28 @@ public:
     bool readFromFile(ifstream & file)
     {
       if(!(file >> reservationId))
-      {
+      { 
+        return false;
 
       }
+      file.ignore();
+
+      getline(file,passengerName);
+
+      file >> passengerAge;
+      file.ignore();
+
+      file >> busNo;
+      file.ignore();
+
+      getline(file, route);
+
+      getline(file, busType);
+
+      file >> seatNo;
+      file.ignore();
+
+      return true;
     }
 
 
@@ -298,6 +318,7 @@ public:
     {
         count = 0;
         nextReservationId = 1001;
+        loadReservations();
     }
 
 
@@ -441,6 +462,8 @@ public:
         count++;
         nextReservationId++;
 
+        saveAllReservations();
+
         cout << "==================================================" << endl;
     }
 
@@ -539,6 +562,8 @@ public:
                 {
                     reservations[i].modifyPassengerDetails();
 
+                    saveAllReservations();
+
                     cout << "\nPassenger details updated successfully." << endl;
                 }
 
@@ -583,6 +608,8 @@ public:
 
 
                     reservations[i].modifySeat(newSeat);
+
+                    saveAllReservations();
 
                     cout << "\nSeat number updated successfully." << endl;
                 }
@@ -630,6 +657,8 @@ public:
 
                     reservations[i].modifySeat(newSeat);
 
+                    saveAllReservations();
+
                     cout << "\nReservation updated successfully." << endl;
                 }
 
@@ -676,6 +705,8 @@ public:
 
                 count--;
 
+                saveAllReservations();
+
                 cout << "\n==================================================" << endl;
                 cout << "       RESERVATION CANCELLED SUCCESSFULLY!" << endl;
                 cout << "==================================================" << endl;
@@ -686,7 +717,64 @@ public:
 
         cout << "\nReservation not found." << endl;
     }
+   
+    //=======================================================
+    //      SAVE ALL RESERVATIONS TO FILE
+    //=======================================================
 
+    void saveAllReservations()
+    {
+        ofstream file;
+
+        file.open("reservations.txt");
+
+        if(!file.is_open())
+        {
+            cout<<"\n Error opening reservations.txt !!"<<endl;
+            return;
+        }
+        cout<<"saving reservations......."<<endl;
+        for(int i=0; i< count ; i++)
+        {
+            reservations[i].saveToFile(file);
+        }
+        file.flush();
+        file.close();
+        cout<<"[ FILE SAVED SUCCESSFULLY.....!]"<<endl;
+    }
+
+    //========================================================
+    //       LOAD RESERVATIONS FROM FILE
+    //=======================================================
+    void loadReservations()
+    {
+        ifstream file;
+
+        file.open("reservations.txt");
+
+        if(!file)
+        {
+           return;
+        }
+
+        count = 0;
+        while(count<100 && reservations[count].readFromFile(file))
+        {
+            count++;
+        }
+        file.close();
+
+        //set next reservation ID
+
+        nextReservationId = 1001;
+        for(int i=0; i<count ;i++)
+        {
+            if(reservations[i].getReservationId() >= nextReservationId)
+            {
+                nextReservationId = reservations[i].getReservationId()+1;
+            }
+        }
+    }
 
     // ========================================================
     // MAIN MENU
@@ -769,6 +857,6 @@ int main()
 
 
 
-g++ main.cpp -o BUSRESERVATION
+//g++ main.cpp -o BUSRESERVATION
 
-.\BUSRESERVATION
+//.\BUSRESERVATION
