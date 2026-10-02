@@ -185,7 +185,7 @@ public:
 
 
     // Modify passenger details
-    void modifyPassengerDetails()
+    bool modifyPassengerDetails()
     {
         int choice;
 
@@ -218,7 +218,9 @@ public:
         else
         {
             cout << "\nInvalid choice." << endl;
+            return false;
         }
+         return true;
     }
 
 
@@ -560,11 +562,12 @@ public:
                 // Modify passenger details
                 if (choice == 1)
                 {
-                    reservations[i].modifyPassengerDetails();
-
+                    if(reservations[i].modifyPassengerDetails());
+                   {
                     saveAllReservations();
 
-                    cout << "\nPassenger details updated successfully." << endl;
+                    cout << "\nPassenger details updated successfully.....!" << endl;
+                   }
                 }
 
 
@@ -581,11 +584,11 @@ public:
 
                     if (reservations[i].getBusNo() == 101)
                     {
-                        maximumSeats = 40;
+                        maximumSeats = 50;
                     }
                     else
                     {
-                        maximumSeats = 30;
+                        maximumSeats = 40;
                     }
 
 
@@ -598,7 +601,7 @@ public:
 
                     // Check availability
                     if (isSeatBookedExcept(
-                            reservations[i].getBusNo(),
+                        reservations[i].getBusNo(),
                             newSeat,
                             reservations[i].getReservationId()))
                     {
@@ -618,8 +621,10 @@ public:
                 // Modify both
                 else if (choice == 3)
                 {
-                    reservations[i].modifyPassengerDetails();
-
+                    if(! reservations[i].modifyPassengerDetails());
+                    {
+                        return;
+                    }
                     int newSeat;
 
                     cout << "\nEnter New Seat Number: ";
